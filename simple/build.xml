@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="simple.makejar">
+	<property name="lib_dir" location="lib"/>
+	<path id="build_classpath">
+		<fileset dir="${lib_dir}" includes="*.jar" />
+	</path>
+	<!-- SETUP VARIABLES AND PATHS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+	<property name="src_dir" location="src"/>
+	<property name="build_dir" location="build"/>
+	<property name="dist"  location="dist"/>
+	<property name="config_dir" value="config"/> <!-- Needed to bootstrap the loading -->
+
+	<!-- The common classpath for building the system. -->
+	<path id="build_classpath">
+		<fileset dir="${lib_dir}" includes="*.jar" />
+	</path>
+
+	<!-- The classpath for running the system. -->
+	<path id="run_classpath">
+		<pathelement path="${build_dir}"/>
+		<fileset dir="${lib_dir}" includes="*.jar"/>
+	</path>
+
+	<!-- BASIC TARGETS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+	<!-- CLEANING TASK - "ant clean" -->
+	<target name="clean">
+		<delete dir="${build_dir}"/>
+		<delete dir="${dist_dir}"/>
+		<delete dir="${run_dir}"/>
+		<delete dir="${databases_dir}"/>
+		<delete dir="${results_dir}"/>
+		<delete dir="docs"/>
+		<delete dir="report"/>
+	</target>
+
+	<!-- COMPILING TASK - "ant compile" -->  
+	<target name="compile">
+		<mkdir dir="${build_dir}"/>
+		<javac srcdir="${src_dir}" destdir="${build_dir}" includeantruntime="false" debug="true">
+			<classpath refid="build_classpath"/>
+			<!-- <exclude name="paper/**"/> -->
+		</javac>
+	</target>
+
+
+	<!-- TESTING TASK - "ant test" -->
+	<target name="test" depends="compile">
+		<junit fork="false">
+			<test name="Test" />
+			<classpath refid="run_classpath" />
+			<formatter type="brief" usefile="false" />
+		</junit>
+	</target>
+
+</project>
